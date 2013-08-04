@@ -1,0 +1,13 @@
+dist
+test
+cabal-dev
+*.o
+*.hi
+*.chi
+*.chs.h
+*.c
+*.h
+*.dll
+*.exe
+test.hs
+.virthualenv
