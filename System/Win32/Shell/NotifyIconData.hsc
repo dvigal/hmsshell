@@ -1,23 +1,19 @@
 {-# LANGUAGE ForeignFunctionInterface #-}
 
-module System.Win32.Shell.NotifyIconData 
-	( NotifyIconData
-	, createNotifyIcon0
-	, createNotifyIcon1
-	) where
+module System.Win32.Shell.NotifyIconData where
 
 import Graphics.Win32
 import System.Win32.Types
+import System.Win32.Mem (zeroMemory)
 import Foreign.Ptr
 import Foreign.Storable
 import Foreign.C.Types
 import Foreign.C.String
 import Foreign.Marshal
-import Foreign.Marshal.Array (peekArray, pokeArray)
 import Data.Maybe
 import Data.Char ( chr, ord )
 
-import Guid (GUID, createGuid)
+import Guid
 
 #let alignment t = "%lu", (unsigned long)offsetof(struct {char x__; t (y__); }, y__)
 
@@ -140,6 +136,14 @@ instance Storable NotifyIconData where
 		let h_szTipPtrOffset       = ptr `plusPtr` (#offset NOTIFYICONDATA, szTip)
 		pokeArray h_szTipPtrOffset $ h_szTip notifyIconData		
 		return ()
+
+emptyNotifyIconData :: IO NotifyIconData
+emptyNotifyIconData = do
+	ptr <- malloc::IO (Ptr NotifyIconData)
+	let szt = (fromIntegral #size NOTIFYICONDATA)::DWORD
+	zeroMemory ptr szt
+	peek ptr
+
 
 createNotifyIcon0 :: HWND -> UINT -> HICON -> UINT -> NotifyIconData
 createNotifyIcon0 hWnd uID hIcon uFlags = createNotifyIcon1 hWnd uID hIcon (Just uFlags)  Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing Nothing 

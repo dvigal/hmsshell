@@ -1,6 +1,6 @@
 module System.Win32.Shell 
 	(
-	  module System.Win32.Shell.NotfyIconData
+	  module System.Win32.Shell.NotifyIconData
 	, module System.Win32.Shell.ShellFunctions
 	) where
 
